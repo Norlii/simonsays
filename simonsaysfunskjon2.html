@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <main class="game">
+        <header>
+          <h1 class="heading js-heading" style="background-image: linear-gradient(to left, transparent, rgb(0, 0, 0), transparent); color:whitesmoke; font-family:verdana; text-align:center; font-size: xx-large;">Simon Says</h1>
+        </header>
+      
+        <section class="tile-container js-container unclickable">
+          <div class="tile tile-red" data-tile="red"></div>
+          <div class="tile tile-green" data-tile="green"></div>
+          <div class="tile tile-blue" data-tile="blue"></div>
+          <div class="tile tile-yellow" data-tile="yellow"></div>
+        </section>
+      
+        <footer class="info-section">
+          <button class="start-button js-start">Start</button>
+          <span class="info js-info hidden"></span>
+        </footer>
+      </main>
+      
+      <div class="hidden">
+        <audio
+          src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3"
+          data-sound="red"
+        ></audio>
+        <audio
+          src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3"
+          data-sound="green"
+        ></audio>
+        <audio
+          src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3"
+          data-sound="blue"
+        ></audio>
+        <audio
+          src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3"
+          data-sound="yellow"
+        ></audio>
+      </div>
+
+<style>
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  font-family: 'Rubik', sans-serif;
+  background-image: linear-gradient(to bottom right, rgb(89, 2, 46), rgb(6, 5, 5));
+  
+}
+
+.game {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.invisble {
+  visibility: hidden;
+}
+
+header {
+  text-align: center;
+  font-size: 18px;
+  
+}
+
+.heading {
+  font-size: 3em;
+}
+
+.tile-container {
+  display: grid;
+  grid-template-rows: 180px 180px;
+  grid-template-columns: 180px 180px;
+  grid-gap: 25px;
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.unclickable {
+  pointer-events: none;
+}
+
+.tile-red {
+  background-color: #f25022;
+  box-shadow: 0 0 0 1px #f25022 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 8px 0 0 #c93a12, 0 8px 0 1px rgba(0, 0, 0, 0.4), 0 8px 8px 1px rgba(0, 0, 0, 0.5);
+  transition: 0.15s;
+}
+
+.tile-red:hover,
+.tile-red:focus {
+  background-color: #ff451a;
+  box-shadow: 0 0 0 1px #FF3000 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 10px 0 0 #e62b00, 0 10px 0 1px rgba(0, 0, 0, 0.4), 0 10px 8px 1px rgba(0, 0, 0, 0.6);
+}
+
+.tile-red:active,
+.tile-red.activated {
+  box-shadow: 0 0 0 1px #ff5c36 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 0 0 1px rgba(0, 0, 0, 0.4);
+  background-color: #ff5c36;
+  transform: translateY(10px);
+}
+
+.tile-green {
+  background-color: #7fba00;
+  box-shadow: 0 0 0 1px #7fba00 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 8px 0 0 #638f05, 0 8px 0 1px rgba(0, 0, 0, 0.4), 0 8px 8px 1px rgba(0, 0, 0, 0.5);
+  transition: 0.15s;
+}
+
+.tile-green:hover,
+.tile-green:focus {
+  background-color: #8cc218;
+  box-shadow: 0 0 0 1px #8cc218 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 10px 0 0 #74a802, 0 10px 0 1px rgba(0, 0, 0, 0.4), 0 10px 8px 1px rgba(0, 0, 0, 0.6)
+}
+
+.tile-green:active,
+.tile-green.activated {
+  box-shadow: 0 0 0 1px #a0ea00 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 0 0 1px rgba(0, 0, 0, 0.4);
+  background-color: #a0ea00;
+  transform: translateY(10px);
+}
+
+.tile-yellow {
+  background-color: #ffb900;
+  box-shadow: 0 0 0 1px #ffb900 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 8px 0 0 #c28e07, 0 8px 0 1px rgba(0, 0, 0, 0.4), 0 8px 8px 1px rgba(0, 0, 0, 0.5);
+  transition: 0.15s;
+}
+
+.tile-yellow:hover,
+.tile-yellow:focus {
+  background-color: #ffb900;
+  box-shadow: 0 0 0 1px #ffb900 inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 8px 0 0 #c28e07, 0 8px 0 1px rgba(0, 0, 0, 0.4), 0 8px 8px 1px rgba(0, 0, 0, 0.5);
+}
+
+.tile-yellow:active,
+.tile-yellow.activated {
+  box-shadow: 0 0 0 1px #ffca3d inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 0 0 1px rgba(0, 0, 0, 0.4);
+  background-color: #ffca3d;
+  transform: translateY(10px);
+}
+
+.tile-blue {
+  background-color: #00a4ef;
+  box-shadow: 0 0 0 1px #00a4ef inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 8px 0 0 #0883bc, 0 8px 0 1px rgba(0, 0, 0, 0.4), 0 8px 8px 1px rgba(0, 0, 0, 0.5);
+  transition: 0.15s;
+}
+
+.tile-blue:hover,
+.tile-blue:focus {
+  background-color: #139ddd;
+  box-shadow: 0 0 0 1px #139ddd inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 10px 0 0 #0c7cb0, 0 10px 0 1px rgba(0, 0, 0, 0.4), 0 10px 8px 1px rgba(0, 0, 0, 0.6);
+}
+
+.tile-blue:active,
+.tile-blue.activated {
+  box-shadow: 0 0 0 1px #2bbcff inset, 0 0 0 2px rgba(255, 255, 255, 0.15) inset, 0 0 0 1px rgba(0, 0, 0, 0.4);
+  background-color: #2bbcff;
+  transform: translateY(10px);
+}
+
+.info-section {
+  text-align: center;
+}
+
+.start-button {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    border-radius: 2em;
+    border: 2px solid black;
+    width: 110px;
+    height: 50px;
+    font-size: medium;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+}
+
+.start-button:hover {
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.start-button:after {
+  content: "";
+  background: white;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+  
+
+}
+
+.start-button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+  
+}
+
+
+.info {
+  font-size: 22px;
+}
+
+@media screen () {
+  .game {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+  }
+
+
+  .heading {
+    font-size: 2em;
+  }
+
+  .tile-container {
+    width: 100%;
+    height: 100%;
+    grid-template-rows: 150px 150px;
+    grid-template-columns: 150px 150px;
+  }
+}
+
+
+</style>
+
+
+
+<script>
+
+
+let sequence = [];
+let humanSequence = [];
+let level = 0;
+
+const startButton = document.querySelector('.js-start');
+const info = document.querySelector('.js-info');
+const heading = document.querySelector('.js-heading');
+const tileContainer = document.querySelector('.js-container');
+
+function resetGame(text) {
+  alert(text);
+  sequence = [];
+  humanSequence = [];
+  level = 0;
+  startButton.classList.remove('hidden');
+  heading.textContent = 'Simon Says';
+  info.classList.add('hidden');
+  tileContainer.classList.add('unclickable');
+}
+
+function humanTurn(level) {
+  tileContainer.classList.remove('unclickable');
+  info.textContent = `Din tur: ${level} Klikk${level > 1 ? 's' : ''}`;
+}
+
+function activateTile(color) {
+  const tile = document.querySelector(`[data-tile='${color}']`);
+  const sound = document.querySelector(`[data-sound='${color}']`);
+
+  tile.classList.add('activated');
+  sound.play();
+
+  setTimeout(() => {
+    tile.classList.remove('activated');
+  }, 300);
+}
+
+function playRound(nextSequence) {
+  nextSequence.forEach((color, index) => {
+    setTimeout(() => {
+      activateTile(color);
+    }, (index + 1) * 600);
+  });
+}
+
+function nextStep() {
+  const tiles = ['red', 'green', 'blue', 'yellow'];
+  const random = tiles[Math.floor(Math.random() * tiles.length)];
+
+  return random;
+}
+
+function nextRound() {
+  level += 1;
+
+  tileContainer.classList.add('unclickable');
+  info.textContent = 'Vent!';
+  heading.textContent = `Level ${level} of 20`;
+
+
+  const nextSequence = [...sequence];
+  nextSequence.push(nextStep());
+  playRound(nextSequence);
+
+  sequence = [...nextSequence];
+  setTimeout(() => {
+    humanTurn(level);
+  }, level * 600 + 1000);
+}
+
+function handleClick(tile) {
+  const index = humanSequence.push(tile) - 1;
+  const sound = document.querySelector(`[data-sound='${tile}']`);
+  sound.play();
+
+  const remainingTaps = sequence.length - humanSequence.length;
+
+  if (humanSequence[index] !== sequence[index]) {
+    resetGame('Oops! Game over, du trykket feil');
+    return;
+  }
+
+  if (humanSequence.length === sequence.length) {
+    if (humanSequence.length === 20) {
+      resetGame('Gratulerer, du klarte det!');
+      return
+    }
+
+    humanSequence = [];
+    info.textContent = 'Riktig!';
+    setTimeout(() => {
+      nextRound();
+    }, 1000);
+    return;
+  }
+
+  info.textContent = `Din tur: ${remainingTaps} Tap${
+    remainingTaps > 1 ? 's' : ''
+  }`;
+}
+
+function startGame() {
+  startButton.classList.add('hidden');
+  info.classList.remove('hidden');
+  info.textContent = 'Vent!';
+  nextRound();
+}
+
+startButton.addEventListener('click', startGame);
+tileContainer.addEventListener('click', event => {
+  const { tile } = event.target.dataset;
+
+  if (tile) handleClick(tile);
+});
+
+
+
+
+</script>
+
+
+</body>
+</html>
